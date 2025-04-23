@@ -14,25 +14,26 @@ const createProduct = async (req, res) => {
       basePrice,
     } = req.body;
 
+    const idUser = req.user?.id || req.body.idUser;
+
     if (
       !name ||
       !brand ||
       !category ||
       !gender ||
       !variants ||
-      variants.length === 0
+      variants.length === 0 ||
+      !idUser
     ) {
       return res
         .status(400)
-        .json({ message: "Thiếu thông tin sản phẩm hoặc biến thể." });
+        .json({ message: "Thiếu thông tin sản phẩm hoặc người dùng." });
     }
 
-    // Kiểm tra giá trị hợp lệ của gender
     if (!["male", "female", "unisex"].includes(gender)) {
       return res.status(400).json({ message: "Giới tính không hợp lệ." });
     }
 
-    // Kiểm tra danh sách biến thể có hợp lệ không
     for (let variant of variants) {
       if (
         !variant.size ||
@@ -46,7 +47,6 @@ const createProduct = async (req, res) => {
       }
     }
 
-    // Lấy giá nhỏ nhất làm basePrice nếu không có
     const minPrice = Math.min(...variants.map((v) => v.price));
 
     const product = new Product({
@@ -58,6 +58,7 @@ const createProduct = async (req, res) => {
       variants,
       images,
       description,
+      idUser,
     });
 
     await product.save();
@@ -72,7 +73,8 @@ const getProducts = async (req, res) => {
   try {
     const products = await Product.find()
       .populate("category")
-      .populate("brand");
+      .populate("brand")
+      .populate("idUser"); // Hiển thị thông tin người tạo nếu cần
 
     res.json(products);
   } catch (error) {
@@ -85,7 +87,8 @@ const getProductById = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id)
       .populate("category")
-      .populate("brand");
+      .populate("brand")
+      .populate("idUser");
 
     if (!product)
       return res.status(404).json({ message: "Không tìm thấy sản phẩm." });
@@ -130,7 +133,6 @@ const updateProduct = async (req, res) => {
       updateData.images = images;
     }
 
-    // Kiểm tra danh sách biến thể nếu có
     if (variants) {
       if (!Array.isArray(variants)) {
         return res.status(400).json({ message: "Variants phải là một mảng." });

@@ -6,7 +6,7 @@ const UserLayout = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-grow">
+      <main className="flex-grow pt-20"> {/* Thêm padding-top để tránh bị navbar che */}
         <Outlet />
       </main>
       <Footer />

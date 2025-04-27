@@ -55,7 +55,15 @@ const Register = () => {
     setLoading(true);
 
     try {
-      const response = await axiosInstance.post("/users/register", formData);
+      // Chỉ gửi các trường cần thiết, không gửi confirmPassword
+      const { fullname, username, email, phone, password } = formData;
+      const response = await axiosInstance.post("/users/register", {
+        fullname,
+        username,
+        email,
+        phone,
+        password,
+      });
       console.log("Registration successful:", response.data);
       alert("✅ Đăng ký thành công!");
       navigate("/login");
@@ -73,8 +81,10 @@ const Register = () => {
         className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md"
         onSubmit={handleRegister}
       >
-        <h2 className="text-3xl font-bold text-center text-gray-800">Đăng Ký</h2>
-        
+        <h2 className="text-3xl font-bold text-center text-gray-800">
+          Đăng Ký
+        </h2>
+
         {error && (
           <div className="p-3 text-sm text-red-500 bg-red-100 border border-red-200 rounded">
             {error}

@@ -1,10 +1,30 @@
 const Product = require("../models/Product");
+const mongoose = require("mongoose");
 
 // Tạo sản phẩm mới
 const createProduct = async (req, res) => {
   try {
-    const { name, brand, category, gender, variants, description, basePrice } =
-      req.body;
+    const {
+      name,
+      brand,
+      category,
+      gender,
+      variants,
+      description,
+      basePrice,
+      userId,
+    } = req.body;
+
+    // Validate ObjectId
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "userId không hợp lệ." });
+    }
+    if (!mongoose.Types.ObjectId.isValid(brand)) {
+      return res.status(400).json({ message: "brand không hợp lệ." });
+    }
+    if (!mongoose.Types.ObjectId.isValid(category)) {
+      return res.status(400).json({ message: "category không hợp lệ." });
+    }
 
     if (
       !name ||
@@ -23,20 +43,27 @@ const createProduct = async (req, res) => {
       return res.status(400).json({ message: "Giới tính không hợp lệ." });
     }
 
+    if (!Array.isArray(variants)) {
+      return res.status(400).json({ message: "Variants phải là một mảng." });
+    }
+
     for (let variant of variants) {
       if (
         !variant.size ||
         !variant.color ||
-        !variant.price ||
-        isNaN(variant.price)
+        variant.price === undefined ||
+        isNaN(Number(variant.price))
       ) {
         return res
           .status(400)
           .json({ message: "Mỗi biến thể phải có size, color và giá hợp lệ." });
       }
+      if (variant.stock !== undefined && isNaN(Number(variant.stock))) {
+        return res.status(400).json({ message: "Stock phải là số." });
+      }
     }
 
-    const minPrice = Math.min(...variants.map((v) => v.price));
+    const minPrice = Math.min(...variants.map((v) => Number(v.price)));
 
     let images = [];
     if (req.files && req.files.length > 0) {
@@ -58,6 +85,7 @@ const createProduct = async (req, res) => {
       variants,
       images,
       description,
+      userId,
     });
 
     await product.save();
@@ -70,19 +98,43 @@ const createProduct = async (req, res) => {
 // Cập nhật sản phẩm
 const updateProduct = async (req, res) => {
   try {
-    const { name, brand, category, gender, variants, description, basePrice } =
-      req.body;
+    const {
+      name,
+      brand,
+      category,
+      gender,
+      variants,
+      description,
+      basePrice,
+      userId,
+    } = req.body;
 
     let updateData = {};
     if (name) updateData.name = name;
-    if (brand) updateData.brand = brand;
-    if (category) updateData.category = category;
+    if (brand) {
+      if (!mongoose.Types.ObjectId.isValid(brand)) {
+        return res.status(400).json({ message: "brand không hợp lệ." });
+      }
+      updateData.brand = brand;
+    }
+    if (category) {
+      if (!mongoose.Types.ObjectId.isValid(category)) {
+        return res.status(400).json({ message: "category không hợp lệ." });
+      }
+      updateData.category = category;
+    }
     if (description) updateData.description = description;
     if (gender) {
       if (!["male", "female", "unisex"].includes(gender)) {
         return res.status(400).json({ message: "Giới tính không hợp lệ." });
       }
       updateData.gender = gender;
+    }
+    if (userId) {
+      if (!mongoose.Types.ObjectId.isValid(userId)) {
+        return res.status(400).json({ message: "userId không hợp lệ." });
+      }
+      updateData.userId = userId;
     }
 
     if (variants) {
@@ -93,17 +145,20 @@ const updateProduct = async (req, res) => {
         if (
           !variant.size ||
           !variant.color ||
-          !variant.price ||
-          isNaN(variant.price)
+          variant.price === undefined ||
+          isNaN(Number(variant.price))
         ) {
           return res.status(400).json({
             message: "Mỗi biến thể phải có size, color và giá hợp lệ.",
           });
         }
+        if (variant.stock !== undefined && isNaN(Number(variant.stock))) {
+          return res.status(400).json({ message: "Stock phải là số." });
+        }
       }
       updateData.variants = variants;
       updateData.basePrice =
-        basePrice || Math.min(...variants.map((v) => v.price));
+        basePrice || Math.min(...variants.map((v) => Number(v.price)));
     }
 
     if (req.files && req.files.length > 0) {
@@ -116,6 +171,14 @@ const updateProduct = async (req, res) => {
         fs.unlinkSync(file.path);
       }
       updateData.images = images;
+    } else if (req.body.images) {
+      // Thêm log kiểm tra giá trị images nhận được từ FE
+      console.log(
+        "[LOG] req.body.images:",
+        req.body.images,
+        typeof req.body.images
+      );
+      updateData.images = req.body.images;
     }
 
     const updatedProduct = await Product.findByIdAndUpdate(
@@ -140,9 +203,14 @@ const updateProduct = async (req, res) => {
 // Lấy danh sách sản phẩm
 const getProducts = async (req, res) => {
   try {
-    const products = await Product.find()
+    const filter = {};
+    if (req.query.userId) {
+      filter.userId = req.query.userId;
+    }
+    const products = await Product.find(filter)
       .populate("category")
-      .populate("brand");
+      .populate("brand")
+      .populate("userId", "_id name email");
     res.json(products);
   } catch (error) {
     res.status(500).json({ message: "Lỗi khi lấy danh sách sản phẩm", error });
@@ -154,7 +222,8 @@ const getProductById = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id)
       .populate("category")
-      .populate("brand");
+      .populate("brand")
+      .populate("userId", "_id name email");
 
     if (!product)
       return res.status(404).json({ message: "Không tìm thấy sản phẩm." });

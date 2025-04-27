@@ -10,7 +10,7 @@ const productSchema = new mongoose.Schema({
   },
   gender: {
     type: String,
-    enum: ["male", "female", "unisex"],
+    enum: ["male", "female", "unisex"], // Chỉ chấp nhận 3 giá trị này
     required: true,
   },
   basePrice: { type: Number, required: true },
@@ -22,9 +22,9 @@ const productSchema = new mongoose.Schema({
       price: { type: Number, required: true },
     },
   ],
-  images: [{ type: String }],
+  images: [{ type: String }], // Danh sách URL ảnh
   description: { type: String },
-  idUser: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
 });
 
 module.exports = mongoose.model("Product", productSchema);

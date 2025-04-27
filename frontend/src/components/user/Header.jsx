@@ -54,13 +54,22 @@ const Header = () => {
             Liên hệ
           </Link>
           {user && (
-            <Link
-              to="/products/add"
-              className="flex items-center hover:text-blue-500"
-            >
-              <FaPlusCircle className="mr-1" />
-              Đăng bán
-            </Link>
+            <>
+              <Link
+                to="/products/add"
+                className="flex items-center hover:text-blue-500"
+              >
+                <FaPlusCircle className="mr-1" />
+                Đăng bán
+              </Link>
+              <Link
+                to="/my-products"
+                className="flex items-center hover:text-blue-500"
+              >
+                <FaUser className="mr-1" />
+                Sản phẩm của tôi
+              </Link>
+            </>
           )}
         </nav>
 
@@ -104,6 +113,12 @@ const Header = () => {
                   <Link to="/orders" className="block p-2 hover:bg-gray-100">
                     Đơn hàng
                   </Link>
+                  <Link
+                    to="/my-products"
+                    className="block p-2 hover:bg-gray-100"
+                  >
+                    Sản phẩm của tôi
+                  </Link>
                   <button
                     onClick={handleLogout}
                     className="block w-full p-2 text-left text-red-500 hover:bg-gray-100"
@@ -141,13 +156,22 @@ const Header = () => {
               Liên hệ
             </Link>
             {user && (
-              <Link
-                to="/products/add"
-                className="flex items-center hover:text-blue-500"
-              >
-                <FaPlusCircle className="mr-1" />
-                Đăng bán
-              </Link>
+              <>
+                <Link
+                  to="/products/add"
+                  className="flex items-center hover:text-blue-500"
+                >
+                  <FaPlusCircle className="mr-1" />
+                  Đăng bán
+                </Link>
+                <Link
+                  to="/my-products"
+                  className="flex items-center hover:text-blue-500"
+                >
+                  <FaUser className="mr-1" />
+                  Sản phẩm của tôi
+                </Link>
+              </>
             )}
           </nav>
         </div>

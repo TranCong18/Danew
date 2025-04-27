@@ -24,6 +24,7 @@ const productSchema = new mongoose.Schema({
   ],
   images: [{ type: String }], // Danh sách URL ảnh
   description: { type: String },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
 });
 
 module.exports = mongoose.model("Product", productSchema);

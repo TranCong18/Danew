@@ -23,6 +23,8 @@ import Login from "./pages/user/auth/Login";
 import Register from "./pages/user/auth/Register";
 import OrderPage from "./pages/user/orders/OrderPage";
 import UserProductAdd from "./pages/user/products/UserProductAdd";
+import MyProducts from "./pages/user/products/MyProducts";
+import EditMyProduct from "./pages/user/products/EditMyProduct";
 // import ProtectedRoute from "./components/ProtectedRoute";
 // import AdminProtectedRoute from "./components/AdminProtectedRoute";
 
@@ -59,6 +61,8 @@ function App() {
           <Route path="orders/history" element={<OrderHistoryPage />} />
           <Route path="orders/:id" element={<OrderDetailPage />} />
           <Route path="products/add" element={<UserProductAdd />} />
+          <Route path="my-products" element={<MyProducts />} />
+          <Route path="products/edit/:id" element={<EditMyProduct />} />
 
           {/* Protected Routes for User */}
           {/* <Route element={<ProtectedRoute />}>

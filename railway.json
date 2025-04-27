@@ -1,10 +1,7 @@
 {
-  "services": [
-    {
-      "name": "backend",
-      "root": "backend",
-      "buildCommand": "npm install",
-      "startCommand": "npm start"
-    }
-  ]
+  "build": {
+    "builder": "NIXPACKS",
+    "buildCommand": "cd backend && npm install",
+    "startCommand": "cd backend && npm start"
+  }
 }

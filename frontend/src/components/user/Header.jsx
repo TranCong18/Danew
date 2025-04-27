@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaShoppingCart, FaSearch, FaBars, FaUser } from "react-icons/fa";
+import { FaShoppingCart, FaSearch, FaBars, FaUser, FaPlusCircle } from "react-icons/fa";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -36,6 +36,12 @@ const Header = () => {
           <Link to="/products" className="hover:text-blue-500">Sản phẩm</Link>
           <Link to="/about" className="hover:text-blue-500">Về chúng tôi</Link>
           <Link to="/contact" className="hover:text-blue-500">Liên hệ</Link>
+          {user && (
+            <Link to="/products/add" className="flex items-center hover:text-blue-500">
+              <FaPlusCircle className="mr-1" />
+              Đăng bán
+            </Link>
+          )}
         </nav>
 
         {/* Thanh tìm kiếm, giỏ hàng & user */}
@@ -44,7 +50,7 @@ const Header = () => {
           <Link to="/cart">
             <FaShoppingCart className="text-gray-700 cursor-pointer hover:text-blue-500" />
           </Link>
-
+          
           {/* Hiển thị đăng nhập / đăng ký nếu chưa đăng nhập */}
           {!user ? (
             <div className="space-x-4">
@@ -59,16 +65,17 @@ const Header = () => {
                 onClick={() => setDropdownOpen(!dropdownOpen)}
               >
                 <FaUser className="text-gray-700" />
-                <span>{user.name}</span>
+                <span>{user.fullname}</span>
               </button>
 
               {/* Dropdown menu */}
               {dropdownOpen && (
                 <div className="absolute right-0 w-40 p-2 mt-2 bg-white border rounded shadow-md">
-                  <Link to="/orders" className="block px-4 py-2 hover:bg-gray-100">Đơn hàng</Link>
+                  <Link to="/profile" className="block p-2 hover:bg-gray-100">Hồ sơ</Link>
+                  <Link to="/orders" className="block p-2 hover:bg-gray-100">Đơn hàng</Link>
                   <button
                     onClick={handleLogout}
-                    className="block w-full px-4 py-2 text-left hover:bg-gray-100"
+                    className="block w-full p-2 text-left text-red-500 hover:bg-gray-100"
                   >
                     Đăng xuất
                   </button>
@@ -76,22 +83,30 @@ const Header = () => {
               )}
             </div>
           )}
-
-          {/* Menu di động */}
-          <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)}>
-            <FaBars className="text-gray-700" />
-          </button>
         </div>
       </div>
 
       {/* Menu mobile */}
+      <button
+        className="fixed p-2 text-white bg-blue-500 rounded-full md:hidden bottom-4 right-4"
+        onClick={() => setMenuOpen(!menuOpen)}
+      >
+        <FaBars />
+      </button>
+
       {menuOpen && (
-        <div className="absolute left-0 w-full bg-white shadow-md md:hidden top-16">
-          <nav className="flex flex-col p-4 space-y-3">
+        <div className="fixed inset-0 z-50 bg-white md:hidden">
+          <nav className="flex flex-col items-center p-4 space-y-4">
             <Link to="/" className="hover:text-blue-500">Trang chủ</Link>
             <Link to="/products" className="hover:text-blue-500">Sản phẩm</Link>
             <Link to="/about" className="hover:text-blue-500">Về chúng tôi</Link>
             <Link to="/contact" className="hover:text-blue-500">Liên hệ</Link>
+            {user && (
+              <Link to="/products/add" className="flex items-center hover:text-blue-500">
+                <FaPlusCircle className="mr-1" />
+                Đăng bán
+              </Link>
+            )}
           </nav>
         </div>
       )}

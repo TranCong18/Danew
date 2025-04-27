@@ -22,6 +22,7 @@ import AddToCartPage from "./pages/user/cart/AddToCartPage";
 import Login from "./pages/user/auth/Login";
 import Register from "./pages/user/auth/Register";
 import OrderPage from "./pages/user/orders/OrderPage";
+import UserProductAdd from "./pages/user/products/UserProductAdd";
 // import ProtectedRoute from "./components/ProtectedRoute";
 // import AdminProtectedRoute from "./components/AdminProtectedRoute";
 
@@ -57,6 +58,8 @@ function App() {
           <Route path="orders" element={<OrderPage />} />
           <Route path="orders/history" element={<OrderHistoryPage />} />
           <Route path="orders/:id" element={<OrderDetailPage />} />
+          <Route path="products/add" element={<UserProductAdd />} />
+
           {/* Protected Routes for User */}
           {/* <Route element={<ProtectedRoute />}>
             {/* <Route path="cart" element={<CartPage />} /> */}

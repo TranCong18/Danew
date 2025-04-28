@@ -19,6 +19,7 @@ const Login = () => {
 
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
+      window.dispatchEvent(new Event("storage"));
       alert("✅ Đăng nhập thành công!");
       navigate("/");
     } catch (err) {

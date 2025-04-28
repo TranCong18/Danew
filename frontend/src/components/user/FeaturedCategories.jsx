@@ -4,9 +4,9 @@ import { FiShoppingCart } from "react-icons/fi";
 import axiosInstance from "../../services/axiosInstance";
 
 const categories = [
-  { id: 1, name: "Giày Nam", gender: "male", image: "/images/cat-men.jpg" },
-  { id: 2, name: "Giày Nữ", gender: "female", image: "/images/cat-women.jpg" },
-  { id: 3, name: "Giày Unisex", gender: "unisex", image: "/images/cat-unisex.jpg" },
+  { id: 1, name: "Nam", gender: "male", image: "/images/cat-men.jpg" },
+  { id: 2, name: "Nữ", gender: "female", image: "/images/cat-women.jpg" },
+  { id: 3, name: "Unisex", gender: "unisex", image: "/images/cat-unisex.jpg" },
 ];
 
 const FeaturedCategories = () => {
@@ -29,7 +29,12 @@ const FeaturedCategories = () => {
 
   // Lọc sản phẩm theo giới tính và giới hạn chỉ 3 sản phẩm
   const filteredProducts = selectedGender
-    ? products.filter((product) => product.gender?.toLowerCase() === selectedGender?.toLowerCase()).slice(0, 3)
+    ? products
+        .filter(
+          (product) =>
+            product.gender?.toLowerCase() === selectedGender?.toLowerCase()
+        )
+        .slice(0, 3)
     : [];
 
   return (
@@ -60,7 +65,9 @@ const FeaturedCategories = () => {
       <div className="mt-8">
         <h3 className="mb-4 text-xl font-semibold text-center">
           {selectedGender
-            ? `Sản phẩm dành cho ${categories.find((c) => c.gender === selectedGender)?.name}`
+            ? `Sản phẩm dành cho ${
+                categories.find((c) => c.gender === selectedGender)?.name
+              }`
             : "Chọn danh mục để hiển thị sản phẩm"}
         </h3>
 
@@ -68,11 +75,16 @@ const FeaturedCategories = () => {
           <div className="grid grid-cols-3 gap-4 px-4">
             {filteredProducts.map((product) => {
               const imageUrl = product.images?.[0] || "/default-image.jpg";
-              const price = product.basePrice || product.variants?.[0]?.price || 0;
+              const price =
+                product.basePrice || product.variants?.[0]?.price || 0;
 
               return (
                 <div key={product._id} className="p-4 border rounded-lg shadow">
-                  <img src={imageUrl} alt={product.name} className="object-cover w-full h-40" />
+                  <img
+                    src={imageUrl}
+                    alt={product.name}
+                    className="object-cover w-full h-40"
+                  />
                   <h4 className="mt-2 text-lg font-semibold">{product.name}</h4>
 
                   {/* Giá tiền & Giỏ hàng */}
@@ -96,7 +108,9 @@ const FeaturedCategories = () => {
           </div>
         ) : (
           <p className="col-span-3 text-center text-gray-500">
-            {selectedGender ? "Không có sản phẩm nào." : "Hãy chọn danh mục để hiển thị sản phẩm"}
+            {selectedGender
+              ? "Không có sản phẩm nào."
+              : "Hãy chọn danh mục để hiển thị sản phẩm"}
           </p>
         )}
       </div>

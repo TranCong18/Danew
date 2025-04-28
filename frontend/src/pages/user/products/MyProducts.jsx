@@ -57,12 +57,12 @@ const MyProducts = () => {
           {products.map((product) => (
             <div
               key={product._id}
-              className="relative p-4 border rounded shadow group"
+              className="p-4 border rounded shadow relative group"
             >
               <img
                 src={product.images?.[0] || "/default-image.jpg"}
                 alt={product.name}
-                className="object-cover w-full h-40 mb-2 cursor-pointer"
+                className="w-full h-40 object-cover mb-2 cursor-pointer"
                 onClick={() => navigate(`/products/edit/${product._id}`)}
                 title="Nhấn để chỉnh sửa sản phẩm"
               />
@@ -70,7 +70,7 @@ const MyProducts = () => {
               <p>Giá: {product.basePrice?.toLocaleString()} VNĐ</p>
               <button
                 onClick={() => handleDelete(product._id)}
-                className="absolute px-2 py-1 text-xs text-white bg-red-500 rounded top-2 right-2 hover:bg-red-600 opacity-80 group-hover:opacity-100"
+                className="absolute top-2 right-2 px-2 py-1 text-xs text-white bg-red-500 rounded hover:bg-red-600 opacity-80 group-hover:opacity-100"
                 title="Xoá sản phẩm"
               >
                 Xoá

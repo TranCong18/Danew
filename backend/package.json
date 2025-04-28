@@ -8,7 +8,8 @@
     "dev": "nodemon index.js",
     "migrate": "node config/runMigrations.js",
     "seed": "node seeders/productSeeder.js",
-    "db:refresh": "npm run migrate && npm run seed"
+    "db:refresh": "npm run migrate && npm run seed",
+    "build": "echo 'Không có bước build, chỉ cần kiểm tra env và cài production dependencies'"
   },
   "keywords": [],
   "author": "",

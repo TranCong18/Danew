@@ -36,7 +36,7 @@ const Header = () => {
       <div className="container flex items-center justify-between p-4 mx-auto">
         {/* Logo */}
         <Link to="/" className="text-2xl font-bold">
-          <img src="/logo.png" alt="Logo" className="h-10" />
+          <img src="/img/logo.png" alt="Logo" className="h-10" />
         </Link>
 
         {/* Menu điều hướng */}
